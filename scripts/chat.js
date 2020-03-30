@@ -1,6 +1,5 @@
 class Chatroom{
-    constructor(room,username){
-        this.room = room;
+    constructor(username){
         this.username = username;
         this.chats = db.collection('chats');
         this.unsub;
@@ -11,7 +10,6 @@ class Chatroom{
         const chat = {
             message,
             username: this.username,
-            room: this.room,
             created_at: firebase.firestore.Timestamp.fromDate(now)
         };
 
@@ -21,7 +19,6 @@ class Chatroom{
 
     getChats(callback){
         this.unsub = this.chats
-        .where('room', '==', this.room)
         .orderBy('created_at')
         .onSnapshot(snapshot=>{
             snapshot.docChanges().forEach(change=>{
@@ -35,14 +32,10 @@ class Chatroom{
 
     updateName(username){
         this.username = username;
+        localStorage.setItem('username',username)
     }
 
-    updateRoom(room){
-        this.room = room;
-        if(this.unsub){
-            this.unsub();
-        }
-    }
+   
 }
 
 
